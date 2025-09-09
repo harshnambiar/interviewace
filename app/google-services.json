@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "547693520332",
+    "project_id": "interviewaceauth",
+    "storage_bucket": "interviewaceauth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547693520332:android:28996d657adf1da0f4a969",
+        "android_client_info": {
+          "package_name": "com.example.interviewace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547693520332-14nfjla889t2pta5ndc1gm0lkc0fqii1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.interviewace",
+            "certificate_hash": "093295aa97f7494c6ccc453d7818a5f4a10ea865"
+          }
+        },
+        {
+          "client_id": "547693520332-8hkkvropk123l9rujncm5hrbttjd30t6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDabGvlc_Quir5dDHiRotsZqr7r-CO9_mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "547693520332-8hkkvropk123l9rujncm5hrbttjd30t6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

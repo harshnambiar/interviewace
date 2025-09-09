@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">InterviewAce</string>
+    <string name="say_send">Send</string>
+    <string name="say_logout">Logout</string>
+    <string name="say_account">Account</string>
+    <string name="say_account_details">Account Details</string>
+    <string name="say_email">Email</string>
+    <string name="say_username">Username</string>
+    <string name="say_change">✏️</string>
+    <string name="change_username">Change Username</string>
+    <string name="not_available">Not Available</string>
+    <string name="bio">Bio</string>
+    <string name="rank_string">%1$d</string>
+    <string name="placeholder_bio">There will be a bio added here later. That\'s all for now. Please stay tuned.</string>
+    <string name="say_loading">Loading&#8230;</string>
+    <string name="say_leaderboard">Leaderboard</string>
+    <string name="say_heart">Heart Image</string>
+    <string name="say_messages_remaining">Messages Left</string>
+    <string name="say_something">Say Something Nice..</string>
+    <string name="welcome_message">Welcome to ChatZone</string>
+    <string name="choice_message">Choose Your Chatbot</string>
+    <string name="chatbot_image">Chatbot Image</string>
+    <string name="bot_icon">Bot Icon</string>
+    <string name="bot_image">Image sent by ChatBot</string>
+    <string name="google_login">Login with Google</string>
+    <string name="flush">Flush Data</string>
+    <string name="about">About ChatZone</string>
+    <string name="say_menu">Menu</string>
+    <string name="say_name">ChatZone</string>
+    <string name="say_about">ChatZone is your multirole AI companion. With different personas and fields of expertise, it has something for everyone.</string>
+    <string name="recharge">Recharge Plan</string>
+    <string name="say_top">Top-up Account</string>
+    <string name="choice_recharge">Please Choose a Recharge Plan</string>
+    <string name="default_web_client_id">547693520332-8hkkvropk123l9rujncm5hrbttjd30t6.apps.googleusercontent.com</string>
+</resources>

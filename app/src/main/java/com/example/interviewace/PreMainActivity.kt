@@ -229,14 +229,13 @@ class PreMainActivity : AppCompatActivity() {
 
     private fun registerUserWithApi(email: String, token: String, callback: (Boolean) -> Unit) {
         val queue = Volley.newRequestQueue(this)
-        val url = "https://quantumsure.onrender.com/api/chatuser/create"
+        val url = "https://quantumsure.onrender.com/api/intuser/create"
         val apiKey = ApiKeyProvider.getApiKey(this)
 
         val dataObject = JSONObject().apply {
             put("email", email)
             put("token", token)
             put("plan", 100)
-            put("userIntro", "")
         }
 
         val jsonBody = JSONObject().apply {

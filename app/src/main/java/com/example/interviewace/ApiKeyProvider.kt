@@ -56,6 +56,22 @@ object ApiKeyProvider {
         return fullKey
     }
 
+    fun getUname(context: Context): String {
+        val storedUname = SecurePrefs.getUname(context)
+        if (storedUname != null){
+            return storedUname
+        }
+        else {
+            return ""
+        }
+    }
+
+    fun saveUname(context: Context, username: String) {
+        if (username == ""){
+            return
+        }
+        SecurePrefs.saveUname(context, username)
+    }
 
 
 

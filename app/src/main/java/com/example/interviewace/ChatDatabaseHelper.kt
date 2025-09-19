@@ -11,7 +11,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONArray
 import org.json.JSONObject
 
-data class ChatMessage(val message: String, val isUser: Boolean, val imageUrl: String)
+data class ChatMessage(val message: String, val isUser: Boolean)
 data class UserToken(val email: String, val token: String)
 
 class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -50,10 +50,8 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             CREATE TABLE IF NOT EXISTS $TABLE_MESSAGES (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_RECEIVER TEXT,
-                $COLUMN_BOT_TYPE TEXT,
                 $COLUMN_MESSAGE TEXT,
-                $COLUMN_IS_USER INTEGER,
-                $COLUMN_IMAGE_URL TEXT
+                $COLUMN_IS_USER INTEGER
             )
         """)
 
@@ -102,7 +100,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         Log.d(TAG, "Database flushed and tables recreated")
     }
 
-    fun saveMessage(receiver: String, botType: String, message: String, isUser: Boolean, imageUrl: String) {
+    fun saveMessage(receiver: String, botType: String, message: String, isUser: Boolean) {
         if (receiver.isEmpty()) {
             Log.e(TAG, "Cannot save message: receiver is empty")
             return
@@ -114,7 +112,6 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
                 put(COLUMN_BOT_TYPE, botType)
                 put(COLUMN_MESSAGE, message)
                 put(COLUMN_IS_USER, if (isUser) 1 else 0)
-                put(COLUMN_IMAGE_URL, imageUrl)
             }
             db.insert(TABLE_MESSAGES, null, values)
             Log.d(TAG, "Saved message for receiver: $receiver, botType: $botType")
@@ -135,7 +132,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         try {
             val cursor = db.query(
                 TABLE_MESSAGES,
-                arrayOf(COLUMN_MESSAGE, COLUMN_IS_USER, COLUMN_IMAGE_URL),
+                arrayOf(COLUMN_MESSAGE, COLUMN_IS_USER),
                 "$COLUMN_RECEIVER = ? AND $COLUMN_BOT_TYPE = ?",
                 arrayOf(receiver, botType),
                 null,
@@ -145,8 +142,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             while (cursor.moveToNext()) {
                 val message = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MESSAGE))
                 val isUser = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_USER)) == 1
-                val imageUrl = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL)) ?: ""
-                messages.add(ChatMessage(message, isUser, imageUrl))
+                messages.add(ChatMessage(message, isUser))
             }
             cursor.close()
         } catch (e: Exception) {
@@ -154,7 +150,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         } finally {
             db.close()
         }
-        Log.d(TAG, "Retrieved ${messages.size} messages for receiver: $receiver, botType: $botType")
+        Log.d(TAG, "Retrieved ${messages.size} messages for receiver: $receiver")
         return messages
     }
 

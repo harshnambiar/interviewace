@@ -133,18 +133,16 @@ class MainActivity : AppCompatActivity() {
         // Existing chatbot setup
         val categories = listOf(
             BroadCategory("GMAT", R.drawable.gmat),
-            BroadCategory("CAT", R.drawable.cat),
-            BroadCategory("UPSC", R.drawable.upsc),
-            BroadCategory("SSC", R.drawable.ssc)
+            BroadCategory("CAT", R.drawable.cat)
 
         )
         val mailVal = intent.getStringExtra("USER_EMAIL")?: "unknown"
         val tokenVal = intent.getStringExtra("USER_TOKEN")?: "unknown"
-        val recyclerView = findViewById<RecyclerView>(R.id.chatbot_recycler_view)
+        val recyclerView = findViewById<RecyclerView>(R.id.category_recycler_view)
         recyclerView.layoutManager = GridLayoutManager(this, 2) // 2 columns for the grid
         recyclerView.adapter = BroadCategoryAdapter(categories) { category ->
             val intent = Intent(this, PostMainActivity::class.java).apply {
-                putExtra("CHATBOT_NAME", category.name)
+                putExtra("BROAD_CATEGORY", category.name)
                 putExtra("USER_EMAIL",mailVal)
                 putExtra("USER_TOKEN", tokenVal)
             }

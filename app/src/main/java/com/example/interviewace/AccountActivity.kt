@@ -190,7 +190,7 @@ class AccountActivity : AppCompatActivity() {
 
     private fun fetchMessagesRemaining(token: String){
         val queue = Volley.newRequestQueue(this)
-        val url = "https://quantumsure.onrender.com/api/chatuser/get"
+        val url = "https://quantumsure.onrender.com/api/intuser/get"
         val apiKey = ApiKeyProvider.getApiKey(this)
 
         val dataObject = JSONObject().apply {

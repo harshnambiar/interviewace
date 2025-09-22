@@ -48,7 +48,7 @@
             android:layout_marginTop="60dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatbot_recycler_view"
+            android:id="@+id/category_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@android:color/transparent"
@@ -127,22 +127,7 @@
                     android:background="@color/white_translucent"
                     android:layout_marginBottom="4dp"/>
 
-                <Button
-                    android:id="@+id/leaderboard_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/say_leaderboard"
-                    android:backgroundTint="@color/purple_light"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_marginBottom="4dp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/white_translucent"
-                    android:layout_marginBottom="4dp"/>
 
                 <Button
                     android:id="@+id/account_button"

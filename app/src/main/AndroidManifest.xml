@@ -26,6 +26,7 @@
         <activity android:name=".PlanActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".AccountActivity" />
+        <activity android:name=".PostMainActivity" />
     </application>
 
 </manifest>

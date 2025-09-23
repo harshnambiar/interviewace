@@ -27,6 +27,7 @@
         <activity android:name=".AboutActivity" />
         <activity android:name=".AccountActivity" />
         <activity android:name=".PostMainActivity" />
+        <activity android:name=".ChatActivity" />
     </application>
 
 </manifest>

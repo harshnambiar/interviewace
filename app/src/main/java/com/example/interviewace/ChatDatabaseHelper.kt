@@ -17,22 +17,17 @@ data class UserToken(val email: String, val token: String)
 class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_NAME = "interviewace.db"
-        private const val DATABASE_VERSION = 9 // Incremented for message_count column
+        private const val DATABASE_NAME = "chatzone.db"
+        private const val DATABASE_VERSION = 10 // Incremented for schema changes
         private const val TABLE_USERS = "users"
         private const val TABLE_MESSAGES = "messages"
-        private const val TABLE_SUMMARIES = "summaries"
         private const val COLUMN_ID = "id"
         private const val COLUMN_RECEIVER = "receiver"
-        private const val COLUMN_BOT_TYPE = "bot_type"
+        private const val COLUMN_SUBCATEGORY = "subcategory"
         private const val COLUMN_MESSAGE = "message"
         private const val COLUMN_IS_USER = "is_user"
-        private const val COLUMN_IMAGE_URL = "image_url"
         private const val COLUMN_EMAIL = "email"
         private const val COLUMN_TOKEN = "token"
-
-        private const val COLUMN_TIMESTAMP = "timestamp"
-        private const val COLUMN_MESSAGE_COUNT = "message_count"
         private const val TAG = "ChatDatabaseHelper"
     }
 
@@ -45,17 +40,16 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             )
         """)
 
-        // Create messages table with all required columns
+        // Create messages table without image_url
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_MESSAGES (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_RECEIVER TEXT,
+                $COLUMN_SUBCATEGORY TEXT,
                 $COLUMN_MESSAGE TEXT,
                 $COLUMN_IS_USER INTEGER
             )
         """)
-
-
 
         Log.d(TAG, "Created tables: $TABLE_USERS, $TABLE_MESSAGES")
     }
@@ -100,7 +94,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         Log.d(TAG, "Database flushed and tables recreated")
     }
 
-    fun saveMessage(receiver: String, botType: String, message: String, isUser: Boolean) {
+    fun saveMessage(receiver: String, subCategory: String, message: String, isUser: Boolean) {
         if (receiver.isEmpty()) {
             Log.e(TAG, "Cannot save message: receiver is empty")
             return
@@ -109,12 +103,12 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         try {
             val values = ContentValues().apply {
                 put(COLUMN_RECEIVER, receiver)
-                put(COLUMN_BOT_TYPE, botType)
+                put(COLUMN_SUBCATEGORY, subCategory)
                 put(COLUMN_MESSAGE, message)
                 put(COLUMN_IS_USER, if (isUser) 1 else 0)
             }
             db.insert(TABLE_MESSAGES, null, values)
-            Log.d(TAG, "Saved message for receiver: $receiver, botType: $botType")
+            Log.d(TAG, "Saved message for receiver: $receiver, subCategory: $subCategory")
         } catch (e: Exception) {
             Log.e(TAG, "Error saving message: ${e.message}", e)
         } finally {
@@ -122,7 +116,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         }
     }
 
-    fun getMessages(receiver: String, botType: String): List<ChatMessage> {
+    fun getMessages(receiver: String, subCategory: String): List<ChatMessage> {
         if (receiver.isEmpty()) {
             Log.e(TAG, "Cannot retrieve messages: receiver is empty")
             return emptyList()
@@ -133,8 +127,8 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             val cursor = db.query(
                 TABLE_MESSAGES,
                 arrayOf(COLUMN_MESSAGE, COLUMN_IS_USER),
-                "$COLUMN_RECEIVER = ? AND $COLUMN_BOT_TYPE = ?",
-                arrayOf(receiver, botType),
+                "$COLUMN_RECEIVER = ? AND $COLUMN_SUBCATEGORY = ?",
+                arrayOf(receiver, subCategory),
                 null,
                 null,
                 "$COLUMN_ID ASC"
@@ -150,7 +144,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         } finally {
             db.close()
         }
-        Log.d(TAG, "Retrieved ${messages.size} messages for receiver: $receiver")
+        Log.d(TAG, "Retrieved ${messages.size} messages for receiver: $receiver, subCategory: $subCategory")
         return messages
     }
 
@@ -194,7 +188,7 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         }
     }
 
-    fun getMessageCount(receiver: String, botType: String): Int {
+    fun getMessageCount(receiver: String, subCategory: String): Int {
         if (receiver.isEmpty()) {
             Log.e(TAG, "Cannot count messages: receiver is empty")
             return 0
@@ -203,8 +197,8 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         var count = 0
         try {
             val cursor = db.rawQuery(
-                "SELECT COUNT(*) FROM $TABLE_MESSAGES WHERE $COLUMN_RECEIVER = ? AND $COLUMN_BOT_TYPE = ?",
-                arrayOf(receiver, botType)
+                "SELECT COUNT(*) FROM $TABLE_MESSAGES WHERE $COLUMN_RECEIVER = ? AND $COLUMN_SUBCATEGORY = ?",
+                arrayOf(receiver, subCategory)
             )
             if (cursor.moveToFirst()) {
                 count = cursor.getInt(0)
@@ -215,15 +209,89 @@ class ChatDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         } finally {
             db.close()
         }
-        Log.d(TAG, "Message count for receiver: $receiver, botType: $botType is $count")
+        Log.d(TAG, "Message count for receiver: $receiver, subCategory: $subCategory is $count")
         return count
     }
 
+    fun purgeChat(receiver: String, subCategory: String) {
+        if (receiver.isEmpty()) {
+            Log.e(TAG, "Cannot purge chat: receiver is empty")
+            return
+        }
+        val db = writableDatabase
+        try {
+            db.delete(
+                TABLE_MESSAGES,
+                "$COLUMN_RECEIVER = ? AND $COLUMN_SUBCATEGORY = ?",
+                arrayOf(receiver, subCategory)
+            )
+            Log.d(TAG, "Purged messages for receiver: $receiver, subCategory: $subCategory")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error purging chat: ${e.message}", e)
+        } finally {
+            db.close()
+        }
+    }
 
+    fun summarizeText(context: Context, receiver: String, subCategory: String, queue: RequestQueue, callback: (String?) -> Unit) {
+        if (receiver.isEmpty()) {
+            Log.e(TAG, "Cannot summarize: receiver is empty")
+            callback(null)
+            return
+        }
+        // Fetch all messages
+        val allMessages = getMessages(receiver, subCategory)
+            .joinToString("\n") { "${if (it.isUser) "User" else subCategory}: ${it.message}" }
 
+        val summaryPrompt = """
+            Summarize the following conversation into a concise summary (100-150 words) that captures the main topics, user preferences, and key points discussed. Focus on user-specific information (e.g., name, likes, dislikes, occupation, location, hobbies, relationship status) and the general context of the conversation. Do not include any sensitive information like passwords or API keys. Here is the conversation:
 
+            $allMessages
+        """.trimIndent()
 
+        val url = "https://api.cerebras.ai/v1/chat/completions"
+        val requestMessages = JSONArray().apply {
+            put(JSONObject().apply {
+                put("role", "system")
+                put("content", summaryPrompt)
+            })
+        }
+        val requestBody = JSONObject().apply {
+            put("model", "llama3.1-8b")
+            put("messages", requestMessages)
+            put("max_tokens", 200)
+            put("temperature", 0.5)
+        }
 
-
-
+        val request = object : JsonObjectRequest(
+            Method.POST, url, requestBody,
+            { response ->
+                try {
+                    val summary = response.getJSONArray("choices")
+                        .getJSONObject(0)
+                        .getJSONObject("message")
+                        .getString("content")
+                    Log.d(TAG, "Generated summary: $summary")
+                    callback(summary)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing summary response: ${e.message}", e)
+                    callback(null)
+                }
+            },
+            { error ->
+                Log.e(TAG, "Error generating summary: ${error.message}", error)
+                callback(null)
+            }
+        ) {
+            override fun getHeaders(): Map<String, String> {
+                return mapOf("Authorization" to "Bearer ${ApiKeyProvider.getApiKey2(context)}")
+            }
+        }
+        request.retryPolicy = com.android.volley.DefaultRetryPolicy(
+            10000, // 10-second timeout
+            2,     // Increased retries
+            1.0f   // Backoff multiplier
+        )
+        queue.add(request)
+    }
 }

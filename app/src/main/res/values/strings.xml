@@ -23,7 +23,7 @@
     <string name="bot_icon">Bot Icon</string>
     <string name="bot_image">Image sent by InterviewAce</string>
     <string name="google_login">Login with Google</string>
-    <string name="choice_college">Please Choose a College</string>
+    <string name="choice_college">Please Choose a University</string>
     <string name="broad_category">%s Interviews</string>
     <string name="flush">Flush Data</string>
     <string name="about">About InterviewAce</string>

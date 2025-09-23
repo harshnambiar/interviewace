@@ -33,8 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/google_login"
-            android:backgroundTint="@color/pink_accent"
-            android:textColor="@color/white"
+            android:backgroundTint="@color/smokey"
+            android:textColor="@color/blackish"
             android:padding="12dp"
             android:layout_marginBottom="16dp" />
 
@@ -43,8 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/flush"
-            android:backgroundTint="@color/pink_accent"
-            android:textColor="@color/white"
+            android:backgroundTint="@color/smokey"
+            android:textColor="@color/blackish"
             android:padding="12dp" />
 
     </LinearLayout>

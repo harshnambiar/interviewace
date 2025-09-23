@@ -11,9 +11,11 @@
     <color name="grey">#222222</color>
     <color name="smoke">#BBBBBB</color>
     <color name="lightsmoke">#DDDDDD</color>
+    <color name="smokey">#CCCCCC</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_translucent">#80FFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="blackish">#222222</color>
     <color name="cyan">#00FFFF</color>
     <color name="magenta">#FF00FF</color>
     <color name="burgundy">#800020</color>
@@ -50,5 +52,7 @@
     <color name="orange_red">#FF4500</color>
     <color name="medium_sea_green">#3CB371</color>
     <color name="medium_slate_blue">#7B68EE</color>
+    <color name="very_light_blue">#D5FFFF</color>
+    <color name="light_blue">#B5FFFF</color>
     <color name="violet">#EE82EE</color>
 </resources>

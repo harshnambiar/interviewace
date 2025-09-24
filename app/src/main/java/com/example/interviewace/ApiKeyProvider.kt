@@ -46,15 +46,7 @@ object ApiKeyProvider {
         return fullKey
     }
 
-    fun getApiKey3(context: Context): String {
-        val storedKey = SecurePrefs.getApiKey3(context)
-        if (storedKey != null){
-            return storedKey
-        }
-        val fullKey = P11 + P10 + P12 + P13 + P17 + P16
-        SecurePrefs.saveApiKey3(context, fullKey)
-        return fullKey
-    }
+
 
     fun getUname(context: Context): String {
         val storedUname = SecurePrefs.getUname(context)

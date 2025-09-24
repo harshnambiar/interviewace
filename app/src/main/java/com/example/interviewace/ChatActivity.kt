@@ -116,6 +116,9 @@ class ChatActivity : AppCompatActivity() {
             else -> "You are a helpful assistant"
         }
 
+        val commonPrompt = "Each of your responses is made up of two parts: 1. Telling the user if their previous response was good for the interview purpose and suggesting improvements where applicable, and 2. Asking the next question or follow up statement as the interviewer."
+        systemPrompt += commonPrompt
+
         // Append stored summary to system prompt
         val moreAddedPrompt = if (latestSummary != null) {
             "\nConversation Summary: $latestSummary"

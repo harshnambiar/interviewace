@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "547693520332-h02vnc0o9ohdsahg042k28d3gkt3t20b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.interviewace",
+            "certificate_hash": "0f9a3204d10113acefaf25398e7bfe5ed1545896"
+          }
+        },
+        {
           "client_id": "547693520332-8hkkvropk123l9rujncm5hrbttjd30t6.apps.googleusercontent.com",
           "client_type": 3
         }
